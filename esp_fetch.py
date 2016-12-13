@@ -1,6 +1,11 @@
 import argparse
+from datetime import datetime
+from os.path import exists
+from os import stat
 from parsel import Selector
-from urllib2 import urlopen
+from urllib import urlopen
+
+MAX_CACHE_AGE = 300 # seconds
 
 parser = argparse.ArgumentParser()
 parser.add_argument("host")
@@ -26,12 +31,34 @@ args = parser.parse_args()
 
 url = "http://{args.host}".format(args=args)
 
-response = urlopen(url)
-try:
-    root = Selector(response.read().decode())
-except:
-    response.close()
-    raise
+cache_filename = "/tmp/espfetch_cache_{args.host}".format(args=args)
+
+html = None
+if exists(cache_filename):
+    age = datetime.now() - datetime.fromtimestamp(stat(cache_filename).st_mtime)
+    if age.total_seconds() < MAX_CACHE_AGE:
+        print "From cache"
+        cache = open(cache_filename, "r")
+        try:
+            html = cache.read()
+        finally:
+            cache.close()
+
+
+if html is None:
+    print "From web"
+    response = urlopen(url)
+    cache = open(cache_filename, "w")
+    try:
+        html = response.read()
+        cache.write(html)
+    finally:
+        response.close()
+        cache.close()
+
+
+html = html.decode()
+root = Selector(html)
 
 data = {}
 
