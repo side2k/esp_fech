@@ -1,6 +1,6 @@
 import argparse
 from parsel import Selector
-import requests
+from urllib2 import urlopen
 
 parser = argparse.ArgumentParser()
 parser.add_argument("host")
@@ -26,8 +26,13 @@ args = parser.parse_args()
 
 url = "http://{args.host}".format(args=args)
 
-response = requests.get(url)
-root = Selector(response.text)
+response = urlopen(url)
+try:
+    root = Selector(response.read().decode())
+except:
+    response.close()
+    raise
+
 data = {}
 
 for header in root.xpath("//div[contains(@class, 'blockk')][1]/b"):
