@@ -17,6 +17,7 @@ script_path=$script_filename/esp_fetch.py
 case $1 in
    config)
         munin_title=`python "$script_path" $host --source $source --param $param --munin-title-only`
+        echo graph_category house
         echo graph_title $munin_title
         echo graph_vlabel Metric
         echo metric.label metric
