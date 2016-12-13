@@ -18,6 +18,9 @@ parser.add_argument(
     "--param",
     help="show only one param with specified name"
     "(you can use few first chars here, case insensitive)")
+parser.add_argument(
+    "--munin-title-only", action="store_true",
+    help="output graph title for Munin")
 
 args = parser.parse_args()
 
@@ -53,5 +56,8 @@ for index, name in enumerate(names):
     for param_name, value in data[name]:
         if args.param and not param_name.lower().startswith(args.param.lower()):
             continue
+        if args.munin_title_only:
+            print "{} sensor {}: {}".format(args.host, name, param_name)
+            break
         format_str = "{name}: {value}" if args.param_names else "{value}"
         print format_str.format(name=param_name, value=value)
