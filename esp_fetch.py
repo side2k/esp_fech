@@ -5,15 +5,21 @@ import requests
 parser = argparse.ArgumentParser()
 parser.add_argument("host")
 parser.add_argument(
-    "--filter",
+    "--source",
     type=int,
     help="show only metrics from one source with this index")
 parser.add_argument(
-    "--show-sources", action="store_true",
+    "--source-names", action="store_true",
     help="show source names and indices")
+parser.add_argument(
+    "--param-names", action="store_true",
+    help="show param names")
+parser.add_argument(
+    "--param",
+    help="show only one param with specified name"
+    "(you can use few first chars here, case insensitive)")
 
 args = parser.parse_args()
-print args
 
 url = "http://{args.host}".format(args=args)
 
@@ -40,9 +46,12 @@ for header in root.xpath("//div[contains(@class, 'blockk')][1]/b"):
 
 names = sorted(data.keys())
 for index, name in enumerate(names):
-    if args.filter is not None and index != args.filter:
+    if args.source is not None and index != args.source:
         continue
-    if args.show_sources:
+    if args.source_names:
         print "---source #{}: {}".format(index, name)
     for param_name, value in data[name]:
-        print param_name, value
+        if args.param and not param_name.lower().startswith(args.param.lower()):
+            continue
+        format_str = "{name}: {value}" if args.param_names else "{value}"
+        print format_str.format(name=param_name, value=value)
