@@ -15,7 +15,7 @@ Other command line arguments:
  * `--source-names` - show source names
  * `--param-names` - show param names
  * `--source <index>` - show data from only one source with index `index`
- * `--param <param> - show only params with name matching `param`. Its case insensitive and you can use only a few first letters. For example - `temp` will match `Temperature`
+ * `--param <param>` - show only params with name matching `param`. Its case insensitive and you can use only a few first letters. For example - `temp` will match `Temperature`
 
 Full list of data can be obtained this way:
 
