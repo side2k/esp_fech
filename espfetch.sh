@@ -18,9 +18,9 @@ case $1 in
    config)
         munin_title=`python "$script_path" $host --source $source --param $param --munin-title-only`
         echo graph_title $munin_title
-        echo graph_vlabel value
-        echo value.label value
+        echo graph_vlabel Metric
+        echo metric.label metric
         exit 0;;
 esac
 
-python $script_path $host --source $source --param $param
+echo metric.value `python $script_path $host --source $source --param $param`
