@@ -37,7 +37,6 @@ html = None
 if exists(cache_filename):
     age = datetime.now() - datetime.fromtimestamp(stat(cache_filename).st_mtime)
     if age.total_seconds() < MAX_CACHE_AGE:
-        print "From cache"
         cache = open(cache_filename, "r")
         try:
             html = cache.read()
@@ -46,7 +45,6 @@ if exists(cache_filename):
 
 
 if html is None:
-    print "From web"
     response = urlopen(url)
     cache = open(cache_filename, "w")
     try:
