@@ -12,7 +12,7 @@ fi
 
 script_filename=`readlink ${0}`
 script_filename=`dirname "$script_filename"`
-script_path=`basename "$script_filename"`/esp_fetch.py
+script_path=$script_filename/esp_fetch.py
 
 case $1 in
    config)
